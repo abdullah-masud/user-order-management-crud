@@ -1,30 +1,43 @@
-import { UserModel } from '../user.model';
+import { User } from '../user.model';
 import { TUser } from './user.interface';
 
 const createUserIntoDB = async (userData: TUser) => {
-  const result = await UserModel.create(userData);
+  if (await User.isUserExists(userData.userId)) {
+    throw new Error('User Already Exists!');
+  }
+
+  const result = await User.create(userData); // built in static method
+
+  // const user = new User(userData); // create an instance
+
+  // if (await user.isUserExists(userData.userId)) {
+  //   throw new Error('User Already Exists!');
+  // }
+
+  // const result = await user.save(); // built in instance method by mongoose
+
   return result;
 };
 
 const getAllUsersFromDB = async () => {
-  const result = await UserModel.find();
+  const result = await User.find();
   return result;
 };
 
 const getSingleUserFromDB = async (userId: string) => {
-  const result = await UserModel.findOne({ userId });
+  const result = await User.findOne({ userId });
   return result;
 };
 
 const updateUserFromDB = async (userId: string, updatedUserData: TUser) => {
-  const result = await UserModel.findOneAndUpdate({ userId }, updatedUserData, {
+  const result = await User.findOneAndUpdate({ userId }, updatedUserData, {
     new: true,
   });
   return result;
 };
 
 const deleteUserFromDB = async (userId: string) => {
-  const result = await UserModel.findOneAndDelete({ userId });
+  const result = await User.findOneAndDelete({ userId });
   return result;
 };
 

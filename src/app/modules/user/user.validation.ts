@@ -15,7 +15,7 @@ const addressValidationSchema = z.object({
 
 // Zod schema for orders
 const ordersValidationSchema = z.object({
-  productName: z.string().min(1),
+  productName: z.string(),
   price: z.number(),
   quantity: z.number(),
 });
@@ -31,7 +31,7 @@ const userValidationSchema = z.object({
   isActive: z.boolean(),
   hobbies: z.array(z.string().min(1)),
   address: addressValidationSchema,
-  orders: z.array(ordersValidationSchema),
+  orders: z.array(ordersValidationSchema).optional(),
 });
 
 export default userValidationSchema;

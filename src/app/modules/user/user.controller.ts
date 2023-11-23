@@ -17,11 +17,14 @@ const createUser = async (req: Request, res: Response) => {
       message: 'User created successfully!',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went Wrong',
-      error: err,
+      message: err.message || 'Something went Wrong',
+      error: {
+        code: 404,
+        description: err.message || 'Something went Wrong',
+      },
     });
   }
 };
@@ -36,10 +39,10 @@ const getAllUsers = async (req: Request, res: Response) => {
       message: 'Users fetched successfully!',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went Wrong',
+      message: err.message || 'Something went Wrong',
       error: err,
     });
   }
@@ -57,10 +60,10 @@ const getSingleUser = async (req: Request, res: Response) => {
       message: 'User fetched successfully!',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went Wrong',
+      message: err.message || 'Something went Wrong',
       error: err,
     });
   }
@@ -85,10 +88,10 @@ const updateUser = async (req: Request, res: Response) => {
       message: 'User updated successfully!',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went Wrong',
+      message: err.message || 'Something went Wrong',
       error: err,
     });
   }
