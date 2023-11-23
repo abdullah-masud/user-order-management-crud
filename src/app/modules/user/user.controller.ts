@@ -50,8 +50,26 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// update user information in DB
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { updatedUserData } = req.body;
+    const result = await UserServices.updateUserFromDB(userId, updatedUserData);
+
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: result,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
+  updateUser,
 };

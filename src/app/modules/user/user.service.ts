@@ -16,8 +16,16 @@ const getSingleUserFromDB = async (userId: string) => {
   return result;
 };
 
+const updateUserFromDB = async (userId: string, updatedUserData: TUser) => {
+  const result = await UserModel.findOneAndUpdate({ userId }, updatedUserData, {
+    new: true,
+  });
+  return result;
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
+  updateUserFromDB,
 };
