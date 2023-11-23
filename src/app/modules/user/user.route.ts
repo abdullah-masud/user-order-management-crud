@@ -5,3 +5,5 @@ const router = express.Router();
 
 // will call controller
 router.post('/create-user', UserControllers.createUser);
+
+export const UserRoutes = router;
