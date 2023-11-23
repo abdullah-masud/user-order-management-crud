@@ -6,6 +6,8 @@ import {
   TUser,
   UserModel,
 } from './user/user.interface';
+import bcrypt from 'bcrypt';
+import config from '../config';
 
 const fullNameSchema = new Schema<TFullName>({
   firstName: {
@@ -104,6 +106,18 @@ userSchema.statics.isUserExists = async function (userId: number) {
 
   return existingUser;
 };
+
+// pre save middleware / hook
+userSchema.pre('save', async function (next) {
+  // hashing password and save into DB
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
 
 // creating a custom instance method
 // userSchema.methods.isUserExists = async function (userId: number) {
