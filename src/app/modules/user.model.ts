@@ -6,13 +6,13 @@ const fullNameSchema = new Schema<TFullName>({
     type: String,
     trim: true,
     required: [true, 'First Name is required'],
-    maxlength: [20, 'First Name cannot be more than 25 characters'],
+    maxlength: [20, 'First Name cannot be more than 20 characters'],
   },
   lastName: {
     type: String,
     trim: true,
     required: [true, 'Last Name is required'],
-    maxlength: [20, 'Last Name cannot be more than 25 characters'],
+    maxlength: [20, 'Last Name cannot be more than 20 characters'],
   },
 });
 
@@ -65,6 +65,7 @@ const userSchema = new Schema<TUser>({
   },
   fullName: {
     type: fullNameSchema,
+    required: [true, 'Full Name is Required'],
   },
   age: {
     type: Number,
@@ -84,7 +85,10 @@ const userSchema = new Schema<TUser>({
       required: [true, 'Hobbies is required'],
     },
   ],
-  address: addressSchema,
+  address: {
+    type: addressSchema,
+    required: [true, 'Address is Required'],
+  },
   orders: [ordersSchema],
 });
 
