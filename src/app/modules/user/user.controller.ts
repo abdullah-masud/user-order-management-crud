@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
 import userValidationSchema from './user.validation';
@@ -5,7 +6,7 @@ import userValidationSchema from './user.validation';
 // create user in DB
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
+    const userData = req.body;
 
     // data validation using zod
     const zodParsedData = userValidationSchema.parse(userData);
@@ -76,7 +77,7 @@ const getSingleUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const { updatedUserData } = req.body;
+    const updatedUserData = req.body;
 
     const zodParsedUpdatedUserData =
       userValidationSchema.parse(updatedUserData);
@@ -125,10 +126,51 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+// add order to user in DB
+const addOrderToUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { productName, price, quantity } = req.body;
+
+    // fetching the user
+    const user = await UserServices.getSingleUserFromDB(userId);
+
+    if (!user) {
+      throw new Error('User not Found');
+    }
+
+    const newOrder = {
+      productName,
+      price,
+      quantity,
+    };
+
+    user?.orders?.push(newOrder);
+
+    await UserServices.updateUserFromDB(userId, user);
+
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully',
+      data: null,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went Wrong',
+      error: {
+        code: 404,
+        description: err.message || 'Something went Wrong',
+      },
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteUser,
+  addOrderToUser,
 };

@@ -81,6 +81,7 @@ const userSchema = new Schema<TUser, UserModel>({
   fullName: {
     type: fullNameSchema,
     required: [true, 'Full Name is Required'],
+    _id: false,
   },
   age: {
     type: Number,
@@ -103,8 +104,12 @@ const userSchema = new Schema<TUser, UserModel>({
   address: {
     type: addressSchema,
     required: [true, 'Address is Required'],
+    _id: false,
   },
-  orders: [ordersSchema],
+  orders: {
+    type: [ordersSchema],
+    _id: false,
+  },
 });
 
 // creating a custom static method
