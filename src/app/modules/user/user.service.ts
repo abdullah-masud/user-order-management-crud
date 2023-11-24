@@ -8,14 +8,6 @@ const createUserIntoDB = async (userData: TUser) => {
 
   const result = await User.create(userData); // built in static method
 
-  // const user = new User(userData); // create an instance
-
-  // if (await user.isUserExists(userData.userId)) {
-  //   throw new Error('User Already Exists!');
-  // }
-
-  // const result = await user.save(); // built in instance method by mongoose
-
   return result;
 };
 

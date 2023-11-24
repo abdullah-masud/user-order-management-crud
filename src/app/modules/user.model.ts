@@ -15,6 +15,13 @@ const fullNameSchema = new Schema<TFullName>({
     trim: true,
     required: [true, 'First Name is required'],
     maxlength: [20, 'First Name cannot be more than 20 characters'],
+    validate: {
+      validator: function (value: string) {
+        const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
+        return firstNameStr === value;
+      },
+      message: '{VALUE} is not in capitalize format',
+    },
   },
   lastName: {
     type: String,
@@ -108,8 +115,8 @@ userSchema.statics.isUserExists = async function (userId: number) {
 };
 
 // pre save middleware / hook
+// hashing password and save into DB
 userSchema.pre('save', async function (next) {
-  // hashing password and save into DB
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   user.password = await bcrypt.hash(
@@ -119,10 +126,23 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-// creating a custom instance method
-// userSchema.methods.isUserExists = async function (userId: number) {
-//   const existingUser = await User.findOne({ userId });
-//   return existingUser;
-// };
+// post save middleware / hook
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+// query middleware
+userSchema.pre('find', function (next) {
+  this.projection({
+    username: 1,
+    fullName: { firstName: 1, lastName: 1, _id: 0 },
+    age: 1,
+    email: 1,
+    address: { street: 1, city: 1, country: 1, _id: 0 },
+    _id: 0,
+  });
+  next();
+});
 
 export const User = model<TUser, UserModel>('User', userSchema);

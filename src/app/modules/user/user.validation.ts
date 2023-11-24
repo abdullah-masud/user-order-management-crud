@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // Zod schema for full name
 const fullNameValidationSchema = z.object({
-  firstName: z.string().min(1).max(20),
+  firstName: z.string().min(1).max(20).trim(),
   lastName: z.string().min(1).max(20),
 });
 
