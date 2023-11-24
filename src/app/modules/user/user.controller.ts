@@ -24,7 +24,7 @@ const createUser = async (req: Request, res: Response) => {
       message: err.message || 'Something went Wrong',
       error: {
         code: 404,
-        description: err.message || 'Something went Wrong',
+        description: err.message + '!' || 'Something went Wrong',
       },
     });
   }
@@ -43,7 +43,7 @@ const getAllUsers = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'Something went Wrong',
+      message: err.message + '!' || 'Something went Wrong',
       error: err,
     });
   }
@@ -67,7 +67,7 @@ const getSingleUser = async (req: Request, res: Response) => {
       message: err.message || 'Something went Wrong',
       error: {
         code: 404,
-        description: err.message || 'Something went Wrong',
+        description: err.message + '!' || 'Something went Wrong',
       },
     });
   }
@@ -98,7 +98,7 @@ const updateUser = async (req: Request, res: Response) => {
       message: err.message || 'Something went Wrong',
       error: {
         code: 404,
-        description: err.message || 'Something went Wrong',
+        description: err.message + '!' || 'Something went Wrong',
       },
     });
   }
@@ -117,11 +117,14 @@ const deleteUser = async (req: Request, res: Response) => {
       message: 'User deleted successfully!',
       data: null,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went Wrong',
-      error: err,
+      message: err.message || 'Something went Wrong',
+      error: {
+        code: 404,
+        description: err.message + '!' || 'Something went Wrong',
+      },
     });
   }
 };
@@ -151,7 +154,7 @@ const addOrderToUser = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Order created successfully',
+      message: 'Order created successfully!',
       data: null,
     });
   } catch (err: any) {
@@ -160,7 +163,64 @@ const addOrderToUser = async (req: Request, res: Response) => {
       message: err.message || 'Something went Wrong',
       error: {
         code: 404,
-        description: err.message || 'Something went Wrong',
+        description: err.message + '!' || 'Something went Wrong',
+      },
+    });
+  }
+};
+
+const getAllOrdersForUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const result = await UserServices.getSingleUserFromDB(userId);
+
+    const allOrders = result?.orders;
+
+    res.status(200).json({
+      success: true,
+      message: 'Order fetched successfully!',
+      data: { orders: allOrders },
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went Wrong',
+      error: {
+        code: 404,
+        description: err.message + '!' || 'Something went Wrong',
+      },
+    });
+  }
+};
+
+const calculatePriceOfOrderOfSingleUser = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { userId } = req.params;
+
+    const result = await UserServices.getSingleUserFromDB(userId);
+
+    const allOrders = result?.orders;
+
+    const totalPrice = allOrders
+      ?.reduce((acc, order) => acc + order.price * order.quantity, 0)
+      .toFixed(2);
+
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: { totalPrice: Number(totalPrice) },
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went Wrong',
+      error: {
+        code: 404,
+        description: err.message + '!' || 'Something went Wrong',
       },
     });
   }
@@ -173,4 +233,6 @@ export const UserControllers = {
   updateUser,
   deleteUser,
   addOrderToUser,
+  getAllOrdersForUser,
+  calculatePriceOfOrderOfSingleUser,
 };
