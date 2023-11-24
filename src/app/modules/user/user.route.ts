@@ -4,7 +4,7 @@ import { UserControllers } from './user.controller';
 const router = express.Router();
 
 // will call controller
-router.post('/create-user', UserControllers.createUser);
+router.post('/', UserControllers.createUser);
 
 router.get('/', UserControllers.getAllUsers);
 

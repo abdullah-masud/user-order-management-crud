@@ -1,4 +1,6 @@
+import config from '../../config';
 import { User } from '../user.model';
+import bcrypt from 'bcrypt';
 import { TUser } from './user.interface';
 
 const createUserIntoDB = async (userData: TUser) => {
@@ -30,9 +32,41 @@ const updateUserFromDB = async (userId: string, updatedUserData: TUser) => {
     throw new Error('User not found');
   }
 
-  const result = await User.findOneAndUpdate({ userId }, updatedUserData, {
-    new: true,
-  });
+  // password is hashed again after updating password
+  const updatedPassword = await bcrypt.hash(
+    updatedUserData.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  // rest of the field is updated and stored in DB
+  const updatedUserId = updatedUserData.userId;
+  const { username, age, email, isActive, hobbies, fullName, address } =
+    updatedUserData;
+  const { firstName, lastName } = updatedUserData.fullName;
+  const { street, city, country } = updatedUserData.address;
+
+  const result = await User.findOneAndUpdate(
+    { userId },
+    {
+      $set: {
+        password: updatedPassword,
+        userId: updatedUserId,
+        username,
+        age,
+        email,
+        isActive,
+        hobbies,
+        fullName,
+        address,
+        firstName,
+        lastName,
+        street,
+        city,
+        country,
+      },
+    },
+    { new: true },
+  );
   return result;
 };
 

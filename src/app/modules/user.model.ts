@@ -28,6 +28,13 @@ const fullNameSchema = new Schema<TFullName>({
     trim: true,
     required: [true, 'Last Name is required'],
     maxlength: [20, 'Last Name cannot be more than 20 characters'],
+    validate: {
+      validator: function (value: string) {
+        const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
+        return firstNameStr === value;
+      },
+      message: '{VALUE} is not in capitalize format',
+    },
   },
 });
 
@@ -76,7 +83,7 @@ const userSchema = new Schema<TUser, UserModel>({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    maxlength: [20, 'Password cannot be more than 20 characters'],
+    maxlength: [30, 'Password cannot be more than 30 characters'],
   },
   fullName: {
     type: fullNameSchema,

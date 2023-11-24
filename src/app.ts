@@ -12,7 +12,10 @@ app.use(cors());
 app.use('/api/users', UserRoutes);
 
 const getAController = (req: Request, res: Response) => {
-  res.send({ message: 'User Order Management Assignment 2' });
+  res.send({
+    success: true,
+    message: 'User Order Management Assignment 2 API',
+  });
 };
 
 app.get('/', getAController);
