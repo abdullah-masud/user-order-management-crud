@@ -17,11 +17,19 @@ const getAllUsersFromDB = async () => {
 };
 
 const getSingleUserFromDB = async (userId: string) => {
+  if ((await User.isUserExists(Number(userId))) === null) {
+    throw new Error('User not found');
+  }
+
   const result = await User.findOne({ userId });
   return result;
 };
 
 const updateUserFromDB = async (userId: string, updatedUserData: TUser) => {
+  if ((await User.isUserExists(Number(userId))) === null) {
+    throw new Error('User not found');
+  }
+
   const result = await User.findOneAndUpdate({ userId }, updatedUserData, {
     new: true,
   });

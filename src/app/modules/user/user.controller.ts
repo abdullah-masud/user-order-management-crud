@@ -64,7 +64,10 @@ const getSingleUser = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'Something went Wrong',
-      error: err,
+      error: {
+        code: 404,
+        description: err.message || 'Something went Wrong',
+      },
     });
   }
 };
@@ -92,7 +95,10 @@ const updateUser = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'Something went Wrong',
-      error: err,
+      error: {
+        code: 404,
+        description: err.message || 'Something went Wrong',
+      },
     });
   }
 };

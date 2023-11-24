@@ -108,7 +108,7 @@ const userSchema = new Schema<TUser, UserModel>({
 });
 
 // creating a custom static method
-userSchema.statics.isUserExists = async function (userId: number) {
+userSchema.statics.isUserExists = async function (userId: string) {
   const existingUser = await User.findOne({ userId });
 
   return existingUser;
@@ -127,19 +127,31 @@ userSchema.pre('save', async function (next) {
 });
 
 // post save middleware / hook
-userSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
+// for create user response
+userSchema.set('toJSON', {
+  transform: function (doc, ret) {
+    delete ret.password;
+    delete ret.fullName._id;
+    delete ret.address._id;
+    delete ret._id;
+    delete ret.__v;
+    delete ret.orders;
+    return ret;
+  },
 });
 
 // query middleware
+// for get all user response
 userSchema.pre('find', function (next) {
   this.projection({
     username: 1,
-    fullName: { firstName: 1, lastName: 1, _id: 0 },
+    'fullName.firstName': 1,
+    'fullName.lastName': 1,
     age: 1,
     email: 1,
-    address: { street: 1, city: 1, country: 1, _id: 0 },
+    'address.street': 1,
+    'address.city': 1,
+    'address.country': 1,
     _id: 0,
   });
   next();
