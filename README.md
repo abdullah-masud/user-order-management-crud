@@ -107,22 +107,23 @@ This API is built using Node.js and Express, with TypeScript as the programming 
     "message": "User fetched successfully!",
     "data": {
         "userId": 1,
-        "username": "john",
+        "username": "m45ud",
         "fullName": {
-            "firstName": "John",
-            "lastName": "Cena"
+            "firstName": "Abdullah",
+            "lastName": "Masud"
         },
-        "age": 25,
-        "email": "johsn@gmail.com",
-        "isActive": true,
+        "age": 24,
+        "email": "masud@gmail.com",
+        "isActive": false,
         "hobbies": [
-            "reading",
-            "hiking"
+            "Programming",
+            "Gaming",
+            "Sleeping"
         ],
         "address": {
-            "street": "123 Main Street",
-            "city": "Anytown",
-            "country": "CountryName"
+            "street": "Nasirabad",
+            "city": "Chittagong",
+            "country": "Bangladesh"
         }
     }
 }
