@@ -24,7 +24,7 @@ To start the server: npm run start:dev
 - Sample API: https://user-crud-management-assignment2.vercel.app/api/users
 - The firstName and lastName should be in capitalized format in the body.
 - The password is hashed using bcrypt and stored in database
-- Request body sample:
+- Sample request body:
 
 ```
 {
@@ -201,7 +201,7 @@ To start the server: npm run start:dev
 - Sample API: https://user-crud-management-assignment2.vercel.app/api/users/1/orders
 - New order is pushed into the orders array.
 - Static method is used to determine if the user exist or not.
-- Request body sample:
+- Sample request body:
 
 ```
 {
