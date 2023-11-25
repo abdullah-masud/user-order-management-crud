@@ -2,6 +2,8 @@
 
 This API is built using Node.js and Express, with TypeScript as the programming language. It provides four main operations for managing user data: creating a new user, updating user information, fetching details of a single user, and deleting a user. Additionally, the API allows you to add orders to a specific user, retrieve the orders for a particular user, and calculate the total price of the orders associated with that user. The API's are discussed below.
 
+- API LINK: https://user-crud-management-assignment2.vercel.app
+
 #### 1. Create New User
 
 - Endpoint: **POST** **/api/users**
