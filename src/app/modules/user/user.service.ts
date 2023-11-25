@@ -40,7 +40,7 @@ const updateUserFromDB = async (userId: string, updatedUserData: TUser) => {
 
   // rest of the field is updated and stored in DB
   const updatedUserId = updatedUserData.userId;
-  const { username, age, email, isActive, hobbies, fullName, address } =
+  const { username, age, email, isActive, hobbies, fullName, address, orders } =
     updatedUserData;
   const { firstName, lastName } = updatedUserData.fullName;
   const { street, city, country } = updatedUserData.address;
@@ -63,6 +63,7 @@ const updateUserFromDB = async (userId: string, updatedUserData: TUser) => {
         street,
         city,
         country,
+        orders,
       },
     },
     { new: true },
