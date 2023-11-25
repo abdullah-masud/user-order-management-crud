@@ -4,6 +4,20 @@ This API is built using Node.js and Express, with TypeScript as the programming 
 
 - API LINK: https://user-crud-management-assignment2.vercel.app
 
+#### To Run Locally
+
+```
+Create a env file and add the following details.
+PORT=5000
+DATABASE_URL= <MONGODB Collection URL>
+BCRYPT_SALT_ROUNDS=12
+```
+
+```
+To install the dependencies: npm install
+To start the server: npm run start:dev
+```
+
 #### 1. Create New User
 
 - Endpoint: **POST** **/api/users**
