@@ -21,7 +21,7 @@ const ordersValidationSchema = z.object({
 });
 
 // Zod schema for the main user model
-const userValidationSchema = z.object({
+const createUserValidationSchema = z.object({
   userId: z.number(),
   username: z.string().min(1),
   password: z.string().min(1).max(30),
@@ -34,4 +34,20 @@ const userValidationSchema = z.object({
   orders: z.array(ordersValidationSchema).optional(),
 });
 
-export default userValidationSchema;
+const updateUserValidationSchema = z.object({
+  userId: z.number().optional(),
+  username: z.string().min(1),
+  password: z.string().min(1).max(30),
+  fullName: fullNameValidationSchema,
+  age: z.number(),
+  email: z.string().email(),
+  isActive: z.boolean(),
+  hobbies: z.array(z.string().min(1)),
+  address: addressValidationSchema,
+  orders: z.array(ordersValidationSchema).optional(),
+});
+
+export const UserValidations = {
+  createUserValidationSchema,
+  updateUserValidationSchema,
+};

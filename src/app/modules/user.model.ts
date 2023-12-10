@@ -4,6 +4,7 @@ import {
   TFullName,
   TOrders,
   TUser,
+  TUserUpdate,
   UserModel,
 } from './user/user.interface';
 import bcrypt from 'bcrypt';
@@ -135,6 +136,24 @@ userSchema.pre('save', async function (next) {
     user.password,
     Number(config.bcrypt_salt_rounds),
   );
+  next();
+});
+
+userSchema.pre('findOneAndUpdate', async function (next) {
+  const update = this.getUpdate();
+
+  if (update && '$set' in update && update.$set) {
+    const userUpdate: TUserUpdate = update;
+
+    // Check if the update includes the password field and if it's being modified
+    if (userUpdate.$set && userUpdate.$set.password) {
+      userUpdate.$set.password = await bcrypt.hash(
+        userUpdate.$set.password,
+        Number(config.bcrypt_salt_rounds),
+      );
+    }
+  }
+
   next();
 });
 

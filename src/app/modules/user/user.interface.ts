@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, UpdateQuery } from 'mongoose';
 
 export type TFullName = {
   firstName: string;
@@ -29,6 +29,12 @@ export type TUser = {
   hobbies: string[];
   address: TAddress;
   orders?: TOrders[];
+};
+
+export type TUserUpdate = UpdateQuery<Document> & {
+  $set?: {
+    password?: string;
+  };
 };
 
 // for creating static

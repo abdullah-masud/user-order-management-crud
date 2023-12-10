@@ -1,6 +1,6 @@
-import config from '../../config';
+// import config from '../../config';
 import { User } from '../user.model';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 import { TUser } from './user.interface';
 
 const createUserIntoDB = async (userData: TUser) => {
@@ -27,48 +27,24 @@ const getSingleUserFromDB = async (userId: string) => {
   return result;
 };
 
-const updateUserFromDB = async (userId: string, updatedUserData: TUser) => {
+const updateUserIntoDB = async (
+  userId: string,
+  updatedData: Partial<TUser>,
+) => {
+  // Check if the user exists before updating
   if ((await User.isUserExists(Number(userId))) === null) {
     throw new Error('User not found');
   }
 
-  // password is hashed again after updating password
-  const updatedPassword = await bcrypt.hash(
-    updatedUserData.password,
-    Number(config.bcrypt_salt_rounds),
-  );
+  // Update the user based on userId
+  const result = await User.findOneAndUpdate({ userId }, { $set: updatedData });
 
-  // rest of the field is updated and stored in DB
-  const updatedUserId = updatedUserData.userId;
-  const { username, age, email, isActive, hobbies, fullName, address, orders } =
-    updatedUserData;
-  const { firstName, lastName } = updatedUserData.fullName;
-  const { street, city, country } = updatedUserData.address;
+  if (!result) {
+    throw new Error('Failed to update user');
+  }
 
-  const result = await User.findOneAndUpdate(
-    { userId },
-    {
-      $set: {
-        password: updatedPassword,
-        userId: updatedUserId,
-        username,
-        age,
-        email,
-        isActive,
-        hobbies,
-        fullName,
-        address,
-        firstName,
-        lastName,
-        street,
-        city,
-        country,
-        orders,
-      },
-    },
-    { new: true },
-  );
-  return result;
+  const updatedUser = await User.findOne({ userId });
+  return updatedUser;
 };
 
 const deleteUserFromDB = async (userId: string) => {
@@ -84,6 +60,6 @@ export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
-  updateUserFromDB,
+  updateUserIntoDB,
   deleteUserFromDB,
 };

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
-import userValidationSchema from './user.validation';
+import { UserValidations } from './user.validation';
 
 // create user in DB
 const createUser = async (req: Request, res: Response) => {
@@ -9,7 +9,8 @@ const createUser = async (req: Request, res: Response) => {
     const userData = req.body;
 
     // data validation using zod
-    const zodParsedData = userValidationSchema.parse(userData);
+    const zodParsedData =
+      UserValidations.createUserValidationSchema.parse(userData);
 
     const result = await UserServices.createUserIntoDB(zodParsedData);
 
@@ -74,18 +75,42 @@ const getSingleUser = async (req: Request, res: Response) => {
 };
 
 // update user information in DB
+// const updateUser = async (req: Request, res: Response) => {
+//   try {
+//     const { userId } = req.params;
+//     const updatedUserData = req.body;
+
+//     const zodParsedUpdatedUserData =
+//       UserValidations.updateUserValidationSchema.parse(updatedUserData);
+
+//     const result = await UserServices.updateUserFromDB(
+//       userId,
+//       zodParsedUpdatedUserData,
+//     );
+
+//     res.status(200).json({
+//       success: true,
+//       message: 'User updated successfully!',
+//       data: result,
+//     });
+//   } catch (err: any) {
+//     res.status(500).json({
+//       success: false,
+//       message: err.message || 'Something went Wrong',
+//       error: {
+//         code: 404,
+//         description: err.message + '!' || 'Something went Wrong',
+//       },
+//     });
+//   }
+// };
+
 const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const updatedUserData = req.body;
+    const updatedData = req.body; // Assuming the updated data is sent in the request body
 
-    const zodParsedUpdatedUserData =
-      userValidationSchema.parse(updatedUserData);
-
-    const result = await UserServices.updateUserFromDB(
-      userId,
-      zodParsedUpdatedUserData,
-    );
+    const result = await UserServices.updateUserIntoDB(userId, updatedData);
 
     res.status(200).json({
       success: true,
@@ -95,10 +120,10 @@ const updateUser = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'Something went Wrong',
+      message: err.message || 'Something went wrong',
       error: {
-        code: 404,
-        description: err.message + '!' || 'Something went Wrong',
+        code: 500,
+        description: err.message || 'Something went wrong',
       },
     });
   }
@@ -150,7 +175,7 @@ const addOrderToUser = async (req: Request, res: Response) => {
 
     user?.orders?.push(newOrder);
 
-    await UserServices.updateUserFromDB(userId, user);
+    await UserServices.updateUserIntoDB(userId, user);
 
     res.status(200).json({
       success: true,
